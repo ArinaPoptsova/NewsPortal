@@ -1,0 +1,60 @@
+from news.models import Author, Category, Post, PostCategory, Comment
+from django.contrib.auth.models import User
+user1 = User.objects.create_user(pk=1, username='user1')
+user2 = User.objects.create_user(pk=2, username='user2')
+author1 = Author.objects.create(pk=1, user=user1, user_rating=0)
+author2 = Author.objects.create(pk=2, user=user2, user_rating=0)
+cat1 = Category.objects.create(pk=1, name='cat1')
+cat2 = Category.objects.create(pk=2, name='cat2')
+cat3 = Category.objects.create(pk=3, name='cat3')
+cat4 = Category.objects.create(pk=4, name='cat4')
+post1 = Post.objects.create(pk=1, author=author1, post_type='A', title='title1', text='text1', rating=0)
+post2 = Post.objects.create(pk=2, author=author1, post_type='A', title='title2', text='text2', rating=0)
+post3 = Post.objects.create(pk=3, author=author2, post_type='N', title='title3', text='text3', rating=0)
+pc1 = PostCategory.objects.create(pk=1, post=post1, category=cat1)
+pc2 = PostCategory.objects.create(pk=2, post=post1, category=cat2)
+pc3 = PostCategory.objects.create(pk=3, post=post2, category=cat2)
+pc4 = PostCategory.objects.create(pk=4, post=post2, category=cat3)
+pc5 = PostCategory.objects.create(pk=5, post=post3, category=cat1)
+pc6 = PostCategory.objects.create(pk=6, post=post3, category=cat4)
+com1 = Comment.objects.create(pk=1, post=post1, user=user2, text='comment1', rating=0)
+com2 = Comment.objects.create(pk=2, post=post1, user=user1, text='comment2', rating=0)
+com3 = Comment.objects.create(pk=3, post=post2, user=user2, text='comment3', rating=0)
+com4 = Comment.objects.create(pk=4, post=post2, user=user2, text='comment4', rating=0)
+com5 = Comment.objects.create(pk=5, post=post3, user=user1, text='comment5', rating=0)
+com6 = Comment.objects.create(pk=6, post=post3, user=user2, text='comment6', rating=0)
+post1.like()
+post1.like()
+post1.like()
+com1.like()
+com2.like()
+post2.like()
+post2.like()
+post3.like()
+post3.like()
+post3.like()
+post3.like()
+post3.like()
+post3.like()
+com5.like()
+com5.like()
+com6.like()
+com6.like()
+com6.like()
+author1.update_rating()
+author2.update_rating()
+best_author = Author.objects.order_by('-user_rating')[0].user
+best_author.username
+best_post = Post.objects.order_by('-rating')[0]
+best_post.date.isoformat()
+best_post.author.user.username
+best_post.rating
+best_post.title
+best_post.preview()
+for comment in best_post.comment_set.all():
+    comment.date.isoformat()
+    comment.user.username
+    comment.rating
+    comment.text
+Category.objects.all().delete()
+User.objects.all().delete()
