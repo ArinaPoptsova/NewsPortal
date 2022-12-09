@@ -1,0 +1,14 @@
+{% extends 'news/default.html' %}
+{% load custom_filters %}
+
+{% block content %}
+    {% for post in post_list %}
+        <div>
+            <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title|censor }}</a></h2>
+            <h6>{{ post.date|date:'M.d.Y' }}</h6>
+            <p>{{ post.text|truncatechars:20|censor }}
+        </div>
+    {% empty %}
+    <p>There are no any posts yet
+    {% endfor %}
+{% endblock content %}
