@@ -1,0 +1,12 @@
+{% extends 'news/default.html' %}
+
+{% block content %}
+<form action="" method="post">
+  {% csrf_token %}
+  <p>Вы действительно хотите удалить {{ object.title }}?</p>
+  <input type="submit" value="Удалить &gt;&gt;">
+</form>
+<form action="{% url 'post_detail' object.pk %}">
+  <button>&lt;&lt; Вернуться на страницу</button>
+</form>
+{% endblock content %}
