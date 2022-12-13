@@ -7,4 +7,22 @@
         <h3>{{ post.date|date:'M.d.Y' }}</h3>
         <p>{{ post.text|censor }}
     </div>
+    {% if user == post.author.user %}
+        {% if post.post_type == 'news' %}
+            <form action="{% url 'update_news' post.pk %}">
+                <button>Обновить новость</button>
+            </form>
+            <form action="{% url 'delete_news' post.pk %}">
+                <button>Удалить новость</button>
+            </form>
+
+        {% else %}
+            <form action="{% url 'update_article' post.pk %}">
+                <button>Обновить статью</button>
+            </form>
+            <form action="{% url 'delete_article' post.pk %}">
+                <button>Удалить статью</button>
+            </form>
+        {% endif %}
+    {% endif %}
 {% endblock content %}

@@ -1,7 +1,11 @@
 {% extends 'news/default.html' %}
 {% load custom_filters %}
+{% load custom_tags %}
+
 
 {% block content %}
+    {% block search %}
+    {% endblock search %}
     {% for post in post_list %}
         <div>
             <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title|censor }}</a></h2>
@@ -11,4 +15,19 @@
     {% empty %}
     <p>There are no any posts yet
     {% endfor %}
+    {% if page_obj.has_previous %}
+        <a href="?{% url_replace page=1%}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+    {{ page_obj.number }}
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if page_obj.next_page_number != paginator.num_pages %}
+            ...
+            <a href="?{% url_replace page=paginator.num_pages %}">{{ paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
 {% endblock content %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from .models import Post, Author
+from .models import Post, Author, Category, PostCategory, Comment
 
 
 @admin.register(Post)
@@ -11,4 +11,19 @@ class PostModelAdmin(ModelAdmin):
 
 @admin.register(Author)
 class AuthorModelAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(Category)
+class CategoryModelAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(PostCategory)
+class PostCategoryModelAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(Comment)
+class CommentModelAdmin(ModelAdmin):
     pass
