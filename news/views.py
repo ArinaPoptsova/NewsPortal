@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -64,25 +65,41 @@ class ArticleCreateView(CreateView):
         return super().form_valid(form)
 
 
-class NewsUpdateView(UpdateView):
+class NewsUpdateView(UserPassesTestMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_news.html'
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author.user == self.request.user
 
-class ArticleUpdateView(UpdateView):
+
+class ArticleUpdateView(UserPassesTestMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_article.html'
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author.user == self.request.user
 
-class NewsDeleteView(DeleteView):
+
+class NewsDeleteView(UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'news/delete_post.html'
     success_url = reverse_lazy('post_list')
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author.user == self.request.user
 
-class ArticleDeleteView(DeleteView):
+
+class ArticleDeleteView(UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'news/delete_post.html'
     success_url = reverse_lazy('post_list')
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author.user == self.request.user
