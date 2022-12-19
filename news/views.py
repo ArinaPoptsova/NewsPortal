@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -33,10 +33,11 @@ class PostSearch(ListView):
         return context
 
 
-class NewsCreateView(CreateView):
+class NewsCreateView(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_news.html'
+    permission_required = ['add_post']
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -49,10 +50,11 @@ class NewsCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ArticleCreateView(CreateView):
+class ArticleCreateView(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_article.html'
+    permission_required = ['add_post']
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -65,20 +67,22 @@ class ArticleCreateView(CreateView):
         return super().form_valid(form)
 
 
-class NewsUpdateView(UserPassesTestMixin, UpdateView):
+class NewsUpdateView(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_news.html'
+    permission_required = ['change_post']
 
     def test_func(self):
         obj = self.get_object()
         return obj.author.user == self.request.user
 
 
-class ArticleUpdateView(UserPassesTestMixin, UpdateView):
+class ArticleUpdateView(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_article.html'
+    permission_required = ['change_post']
 
     def test_func(self):
         obj = self.get_object()

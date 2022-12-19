@@ -1,0 +1,13 @@
+{% extends 'news/default.html' %}
+
+{% block content %}
+<h1>{% block title %}{% endblock title %}</h1>
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Save">
+  {% if is_not_author %}
+    <button> <a href="{% url 'upgrade' %}"> Become an author</a> </button>
+  {% endif %}
+</form>
+{% endblock content %}

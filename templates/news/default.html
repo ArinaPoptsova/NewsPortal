@@ -11,6 +11,15 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <style>
+            li {
+                list-style-type: none;
+                }
+            ul {
+                margin-left: 0;
+                padding-left: 0;
+                }
+        </style>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -22,6 +31,17 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="/news">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/news/search">Search</a></li>
+                        {% if request.user.username %}
+                            <li class="nav-item"><a class="nav-link" href="/accounts/logout/">Logout</a></li>
+                            {% if request.user.profile %}
+                                <li class="nav-item"><a class="nav-link" href="/profile/{{ request.user.pk }}/update/">My Profile</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="/profile/{{ request.user.pk }}/create/">My Profile</a></li>
+                            {% endif %}
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="/accounts/login/">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/accounts/signup/">Register</a></li>
+                        {% endif %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
