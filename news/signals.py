@@ -28,5 +28,5 @@ def notify_new_post(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Post)
 def constraint_post(sender, instance, **kwargs):
-    if Post.objects.filter(date__gt=datetime.date.today()).count() > 3:
+    if Post.objects.filter(date__gt=datetime.date.today(), author=instance.author).count() > 3:
         raise RequestOver
