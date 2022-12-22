@@ -47,7 +47,7 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 @login_required
 def upgrade_me(request):
     user = request.user
-    premium_group = Group.objects.get(name='authors')
+    author_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
-        premium_group.user_set.add(user)
+        author_group.user_set.add(user)
     return redirect('/news/')

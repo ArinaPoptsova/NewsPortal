@@ -20,12 +20,21 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=150, unique=True)
+    subscribers = models.ManyToManyField(User, through='UserCategory')
 
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = 'Categories'
+
+
+class UserCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'UserCategories'
 
 
 class Post(models.Model):
@@ -35,7 +44,7 @@ class Post(models.Model):
                                      ('A', 'article')
                                  ], default='N')
     date = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    category = models.ManyToManyField(Category, through='PostCategory', related_query_name='post')
     title = models.CharField(max_length=255)
     text = models.TextField()
     rating = models.PositiveIntegerField()

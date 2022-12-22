@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    {% for post in posts %}
+        <h2><a href="http://127.0.0.1:8000/news/{{ post.pk }}/">{{ post.title }}</a></h2>
+        <p>{{ post.text|truncatechars:50 }}</p>
+    {% empty %}
+        <p>No any posts yet</p>
+    {% endfor %}
+</body>
+</html>

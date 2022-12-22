@@ -9,6 +9,7 @@ from django import forms
 
 class PostFilter(django_filters.FilterSet):
     title = django_filters.CharFilter()
+    category = django_filters.ChoiceFilter(choices=Category.objects.values_list())
     date = django_filters.DateTimeFilter(widget=forms.DateTimeInput(attrs={'type': 'date'}))
 
     class Meta:

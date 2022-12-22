@@ -7,5 +7,9 @@
     {{ filterset.form.as_p }}
     <input type="submit" value="Search">
 </form>
+{{ filterset.data.category.id }}
+{% if filterset.data.category %}
+    <button><a href="{% url 'subscribe' filterset.data.category %}"> Subscribe</a></button>
+{% endif %}
 {% endblock search %}
 
