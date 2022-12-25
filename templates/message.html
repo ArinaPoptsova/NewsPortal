@@ -7,7 +7,8 @@
 </head>
 <body>
 {% load account %}
-<h1><a href="http://127.0.0.1:8000/news/{{ news.pk }}">{{ news.title }}</a></h1>
+<h1><a href="http://127.0.0.1:8000/news/{{ news_object.pk }}">{{ news.title }}</a></h1>
+    <p>{{ news.path }}</p>
   <p>{{ news.text|truncatechars:50 }}</p>
 </body>
 </html>

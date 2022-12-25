@@ -12,6 +12,7 @@ from .forms import PostForm
 from .exceptions import AuthorDoesNotExist
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ObjectDoesNotExist
+from .tasks import notify_new_post
 
 
 def subscribe(request, category_id):
@@ -53,7 +54,7 @@ class NewsCreateView(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_news.html'
-    permission_required = ['add_post']
+    permission_required = ['news.add_post']
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -65,31 +66,32 @@ class NewsCreateView(PermissionRequiredMixin, CreateView):
             raise AuthorDoesNotExist
         return super().form_valid(form)
 
-    # def post(self, request, *args, **kwargs):
-    #     news = self.request.POST
-    #     html_content = render_to_string(
-    #         'message.html',
-    #         {
-    #             'news': news,
-    #         }
-    #     )
-    #     categories = [Category.objects.get(id=id) for id in map(int, news.getlist('category'))]
-    #     msg = EmailMultiAlternatives(
-    #         subject=news['title'],
-    #         body=news['text'],
-    #         from_email='lolkovalolka@yandex.ru',
-    #         to=[subscriber.email for cat in categories for subscriber in cat.subscribers.all()]
-    #     )
-    #     msg.attach_alternative(html_content, 'text/html')
-    #     msg.send()
-    #     return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        notify_new_post.delay(self.request.POST, self.request.POST.getlist('category'), *args, **kwargs)
+        # news = self.request.POST
+        # html_content = render_to_string(
+        #     'message.html',
+        #     {
+        #         'news': news,
+        #     }
+        # )
+        # categories = [Category.objects.get(id=id) for id in map(int, news.getlist('category'))]
+        # msg = EmailMultiAlternatives(
+        #     subject=news['title'],
+        #     body=news['text'],
+        #     from_email='lolkovalolka@yandex.ru',
+        #     to=[subscriber.email for cat in categories for subscriber in cat.subscribers.all()]
+        # )
+        # msg.attach_alternative(html_content, 'text/html')
+        # msg.send()
+        return super().post(request, *args, **kwargs)
 
 
 class ArticleCreateView(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_article.html'
-    permission_required = ['add_post']
+    permission_required = ['news.add_post']
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -101,7 +103,8 @@ class ArticleCreateView(PermissionRequiredMixin, CreateView):
             raise AuthorDoesNotExist
         return super().form_valid(form)
 
-    # def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        notify_new_post.delay(self.request.POST, self.request.POST.getlist('category'), *args, **kwargs)
     #     news = self.request.POST
     #     html_content = render_to_string(
     #         'message.html',
@@ -118,14 +121,14 @@ class ArticleCreateView(PermissionRequiredMixin, CreateView):
     #     )
     #     msg.attach_alternative(html_content, 'text/html')
     #     msg.send()
-    #     return super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class NewsUpdateView(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'news/edit_news.html'
-    permission_required = ['change_post']
+    permission_required = ['news.change_post']
 
     def test_func(self):
         obj = self.get_object()
@@ -136,7 +139,7 @@ class ArticleUpdateView(UserPassesTestMixin, PermissionRequiredMixin, LoginRequi
     form_class = PostForm
     model = Post
     template_name = 'news/edit_article.html'
-    permission_required = ['change_post']
+    permission_required = ['news.change_post']
 
     def test_func(self):
         obj = self.get_object()

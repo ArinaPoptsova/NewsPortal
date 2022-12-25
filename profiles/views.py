@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
+from news.models import Author
 from profiles.models import Profile
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
@@ -50,4 +51,5 @@ def upgrade_me(request):
     author_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         author_group.user_set.add(user)
+        Author.objects.create(user=user, user_rating=0)
     return redirect('/news/')
