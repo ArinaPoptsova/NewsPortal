@@ -1,0 +1,5 @@
+INFO 2023-01-09 03:01:32,233 autoreload Watching for file changes with StatReloader
+INFO 2023-01-09 03:01:35,952 autoreload Watching for file changes with StatReloader
+INFO 2023-01-09 03:01:51,313 autoreload /home/arinap/NewsPaper/news/views.py changed, reloading.
+INFO 2023-01-09 03:01:51,760 autoreload Watching for file changes with StatReloader
+INFO 2023-01-09 03:02:58,161 autoreload /home/arinap/NewsPaper/newspaper/settings.py changed, reloading.

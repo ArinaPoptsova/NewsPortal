@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -16,6 +17,9 @@ class Author(models.Model):
         for comment in self.user.comment_set.all():
             self.user_rating += comment.rating
         self.save()
+
+    def __str__(self):
+        return self.user.username
 
 
 class Category(models.Model):
@@ -62,6 +66,10 @@ class Post(models.Model):
 
     def preview(self):
         return self.text[:124] + ' ... '
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'post-{self.pk}')
 
 
 class PostCategory(models.Model):

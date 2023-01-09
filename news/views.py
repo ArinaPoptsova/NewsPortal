@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -32,6 +33,15 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
+
 
 class PostSearch(ListView):
     queryset = Post.objects.order_by('-date')
@@ -41,7 +51,6 @@ class PostSearch(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset)
-        # self.filterset.
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
